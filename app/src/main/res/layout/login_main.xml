@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="login"
+            type="com.activity.ExampleActivity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/wallpaperbetter">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/idEditTxtView"
+            android:layout_width="400dp"
+            android:layout_height="120dp"
+            android:background="@drawable/id_stroke"
+            android:maxLines="1"
+            android:hint="ID"
+            android:textAlignment="center"
+            android:textColor="#F20E0E0E"
+            android:textSize="30sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/passwordEditTxtView"
+            android:layout_width="400dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="124dp"
+            android:background="@drawable/id_stroke"
+            android:maxLines="1"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textAlignment="center"
+            android:textColor="#F20E0E0E"
+            android:textSize="30sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="@+id/idEditTxtView"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/idEditTxtView"
+            app:layout_constraintTop_toBottomOf="@+id/idEditTxtView" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/loginTxtView"
+            android:layout_width="200dp"
+            android:layout_height="260dp"
+            android:layout_marginEnd="250dp"
+            android:background="@drawable/id_stroke"
+            android:text="로그인"
+            android:textSize="60sp"
+            android:textColor="@color/black"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/passwordEditTxtView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/idEditTxtView" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:layout_width="200dp"
+            android:layout_height="240dp"
+            android:layout_marginStart="250dp"
+            android:background="@drawable/id_stroke"
+            android:text="Auto Login"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/passwordEditTxtView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/idEditTxtView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

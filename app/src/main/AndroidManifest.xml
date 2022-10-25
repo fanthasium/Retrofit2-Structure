@@ -16,9 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BenfordsLaw"
         android:usesCleartextTraffic="true"
+        android:name="com.sharedpref.App"
         tools:targetApi="31">
         <activity
-            android:name="com.activity.ExampleActivity"
+            android:name="com.activity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

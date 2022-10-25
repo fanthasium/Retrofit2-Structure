@@ -7,7 +7,7 @@
 
         <variable
             name="login"
-            type="com.activity.ExampleActivity" />
+            type="com.activity.LoginActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

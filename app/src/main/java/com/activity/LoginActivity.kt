@@ -1,41 +1,32 @@
 package com.activity
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.ViewModelMain
-import com.dto.*
+import com.dto.RequestDto
 import com.example.benfordslaw.R
 import com.example.benfordslaw.databinding.LoginMainBinding
-import com.responsedata.User
+import com.http.Http
+import com.requestdata.LoginRequest
+import com.sharedpref.PreferenceUtil
 import kotlinx.coroutines.*
 import okhttp3.logging.HttpLoggingInterceptor
+import timber.log.Timber
 import java.lang.Exception
-import kotlin.coroutines.suspendCoroutine
 
 
-class ExampleActivity : AppCompatActivity() {
+class LoginActivity() : AppCompatActivity() {
 
     private lateinit var binding: LoginMainBinding
-    private lateinit var viewModel: ViewModelMain
 
-    val responseData = HashMap<String, String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.login_main)
 
-        viewModel = ViewModelProvider(
-            this,
-            ViewModelProvider.NewInstanceFactory()
-        )[ViewModelMain::class.java]
 
         Log.e("line", "---------------------------------------------")
 
@@ -44,12 +35,12 @@ class ExampleActivity : AppCompatActivity() {
 
         //  response가 비동기 실행이기에 코루틴 사용해야함 , 그 외 비동기적 실행 구성으로 짜야함
 
-
         binding.loginTxtView.setOnClickListener {
 
-            CoroutineScope(Dispatchers.IO).launch {
+
+            CoroutineScope(Dispatchers.Main).launch {
                 val resultData = Http.service.getLogin(
-                    data = RequestData(
+                    data = LoginRequest(
                         id = binding.idEditTxtView.text.toString(),
                         password = binding.passwordEditTxtView.text.toString(),
                         role = "RCT",
@@ -59,34 +50,32 @@ class ExampleActivity : AppCompatActivity() {
 
                 try {
                     if (resultData.isSuccessful) {
-                        Log.e("zzzzzzz", "${resultData.body()}")
-                        val info = resultData.body()?.result?.user
-                        suspend {
-                            viewModel.liveData.observe(this@ExampleActivity, Observer {
-                                viewModel.userInfo(
-                                    User(
-                                        info!!.name,
-                                        info.birth,
-                                        info.education,
-                                        info.gender,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        info.createAt
-                                    )
-                                )
-                            })
-                        }
+                        Timber.e("${resultData.body()}")
+                        Log.e("zzzz","${resultData.body()}")
 
-                        val intent = Intent(this@ExampleActivity, InfoActivity::class.java)
+
+                        val accessToken = resultData.body()?.result?.access
+                        val user = resultData.body()?.result!!.user
+
+                        PreferenceUtil(this@LoginActivity).setString(
+                            PreferenceUtil.ACCESS_TOKEN,
+                            accessToken.toString()
+                        )
+
+                        val intent = Intent(this@LoginActivity, InfoActivity::class.java)
+                        intent.apply {
+                            putExtra(  "name", user.name)
+                            putExtra(  "gender", user.gender)
+                            putExtra(  "birth", user.birth)
+                        }
                         startActivity(intent)
                     }
                 } catch (e: Exception) {
                     Log.e("FAILED : ", "${resultData.code()}")
                     e.printStackTrace()
                 }
+
+
             }
         }
 
@@ -135,10 +124,5 @@ class ExampleActivity : AppCompatActivity() {
                  }
              })*/
     }
-
-    fun toast() {
-        Toast.makeText(this, "${responseData["token"]}", Toast.LENGTH_SHORT).show()
-    }
-
 }
 

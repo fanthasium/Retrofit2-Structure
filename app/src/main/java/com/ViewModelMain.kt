@@ -20,7 +20,7 @@ class ViewModelMain : ViewModel() {
         _liveData.value = listOf()
     }
 
-    fun userInfo(user: User) {
+    fun gameList(user: User) {
         viewModelScope.launch(Dispatchers.IO) {
             _liveData.value?.plus(user)
         }

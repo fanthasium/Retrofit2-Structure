@@ -9,7 +9,8 @@
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#AEAEAE">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/userInfoTxtView"
@@ -22,13 +23,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/listBtn"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:textAlignment="center"
+        android:text="ALL List\n(touch me)"
+        android:gravity="center"
+        android:textSize="100sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/userInfoTxtView"
+        app:layout_constraintStart_toEndOf="@+id/userInfoTxtView"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

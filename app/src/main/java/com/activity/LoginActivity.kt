@@ -6,7 +6,6 @@ import android.util.Log
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.dto.RequestDto
 import com.example.benfordslaw.R
 import com.example.benfordslaw.databinding.LoginMainBinding
 import com.http.Http
@@ -51,7 +50,7 @@ class LoginActivity() : AppCompatActivity() {
                 try {
                     if (resultData.isSuccessful) {
                         Timber.e("${resultData.body()}")
-                        Log.e("zzzz","${resultData.body()}")
+                        Log.e("LoginActivity(Body)","${resultData.body()}")
 
 
                         val accessToken = resultData.body()?.result?.access

@@ -1,7 +1,6 @@
 package com.sharedpref
 
 import android.app.Application
-import com.activity.LoginActivity
 
 class App: Application() {
 

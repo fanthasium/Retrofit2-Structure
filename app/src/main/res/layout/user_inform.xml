@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/listBtn"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -37,10 +37,22 @@
         app:layout_constraintStart_toEndOf="@+id/userInfoTxtView"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/logOutTxtView"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:text="logOut"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+     <FrameLayout
         android:id="@+id/screenView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

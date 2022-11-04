@@ -3,6 +3,7 @@ package com.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -17,27 +18,46 @@ import timber.log.Timber
 import java.lang.Exception
 
 
-class LoginActivity() : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: LoginMainBinding
+    var check = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.login_main)
 
+        val intent = Intent(this@LoginActivity, InfoActivity::class.java)
+        val checkRec =PreferenceUtil(this@LoginActivity).getString(PreferenceUtil.CHECK_BOX, "" )
 
         Log.e("line", "---------------------------------------------")
 
+
+        if(checkRec == "true"){
+            startActivity(intent)
+            finish()
+        }
+
         Http.clientBuilder.addInterceptor(Http.loggingInterceptor)
         Http.loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        //  retrofit2 이 비동기 실행이기에 코루틴 사용해야함 , 비동기적 실행 구성으로 짜야함
 
-        //  response가 비동기 실행이기에 코루틴 사용해야함 , 그 외 비동기적 실행 구성으로 짜야함
+
+        // checkbox o,x
+        binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                check = true
+                PreferenceUtil(this@LoginActivity).setString(
+                    PreferenceUtil.CHECK_BOX,
+                    check.toString()
+                )
+            }
+        }
 
         binding.loginTxtView.setOnClickListener {
-
-
             CoroutineScope(Dispatchers.Main).launch {
+
                 val resultData = Http.service.getLogin(
                     data = LoginRequest(
                         id = binding.idEditTxtView.text.toString(),
@@ -47,35 +67,34 @@ class LoginActivity() : AppCompatActivity() {
                     )
                 )
 
-                try {
-                    if (resultData.isSuccessful) {
-                        Timber.e("${resultData.body()}")
-                        Log.e("LoginActivity(Body)","${resultData.body()}")
+                   try {
+                       if (resultData.isSuccessful) {
+                           Timber.e("${resultData.body()}")
+                           Log.e("LoginActivity(Body)", "${resultData.body()}")
 
+                           val accessToken = resultData.body()?.result?.access
+                           val user = resultData.body()?.result!!.user
 
-                        val accessToken = resultData.body()?.result?.access
-                        val user = resultData.body()?.result!!.user
+                           //set Token
+                           PreferenceUtil(this@LoginActivity).setString(
+                               PreferenceUtil.ACCESS_TOKEN,
+                               accessToken.toString()
+                           )
 
-                        PreferenceUtil(this@LoginActivity).setString(
-                            PreferenceUtil.ACCESS_TOKEN,
-                            accessToken.toString()
-                        )
+                           intent.apply {
+                               putExtra(  "name", user.name)
+                               putExtra(  "gender", user.gender)
+                               putExtra(  "birth", user.birth)
+                           }
 
-                        val intent = Intent(this@LoginActivity, InfoActivity::class.java)
-                        intent.apply {
-                            putExtra(  "name", user.name)
-                            putExtra(  "gender", user.gender)
-                            putExtra(  "birth", user.birth)
-                        }
-                        startActivity(intent)
-                    }
-                } catch (e: Exception) {
-                    Log.e("FAILED : ", "${resultData.code()}")
-                    e.printStackTrace()
-                }
-
-
-            }
+                           startActivity(intent)
+                           finish()
+                       }
+                   } catch (e: Exception) {
+                       Log.e("FAILED : ", "${resultData.code()}")
+                       e.printStackTrace()
+                   }
+               }
         }
 
 
@@ -122,6 +141,12 @@ class LoginActivity() : AppCompatActivity() {
                      Log.e("so sad", "onFailure 에러: " + t.message.toString());
                  }
              })*/
+    }
+
+    fun autoLogin() {
+        if (binding.checkBox.isChecked) {
+            check = true
+        }
     }
 }
 

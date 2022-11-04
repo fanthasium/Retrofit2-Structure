@@ -11,9 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
-import com.ViewModelLogin
+import com.ViewModelGameList
 import com.adapter.ListAdapter
 
 import com.example.benfordslaw.R
@@ -24,6 +23,7 @@ class ListFragment : Fragment() {
 
     lateinit var binding: FragmentGameListBinding
     lateinit var adapter: ListAdapter
+    val viewModel: ViewModelGameList by viewModels()
 
 
     override fun onCreateView(
@@ -38,11 +38,11 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModel: ViewModelLogin by viewModels()
+
         val rcy = binding.rcyView
 
         context?.let { viewModel.gameList(it) }
-        viewModel.liveData.observe(this, Observer {
+        viewModel.liveData.observe(viewLifecycleOwner, Observer {
             val data = viewModel.liveData.value
             adapter = ListAdapter(data!!)
             rcy.setHasFixedSize(true)
@@ -51,5 +51,10 @@ class ListFragment : Fragment() {
                 GridLayoutManager(activity, 5, GridLayoutManager.HORIZONTAL, false)
         })
 
+        binding.closeBtn.setOnClickListener{
+
+        }
+
     }
+
 }

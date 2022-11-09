@@ -1,18 +1,23 @@
 package com.fragment
 
+import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.createBitmap
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 
 import com.ViewModelGameList
+import com.activity.InfoActivity
 import com.adapter.ListAdapter
 
 import com.example.benfordslaw.R
@@ -25,6 +30,11 @@ class ListFragment : Fragment() {
     lateinit var adapter: ListAdapter
     val viewModel: ViewModelGameList by viewModels()
 
+    interface callBack {
+        fun callBack(){
+            //fragment call back 패턴
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,7 +62,8 @@ class ListFragment : Fragment() {
         })
 
         binding.closeBtn.setOnClickListener{
-
+            val transaction: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.remove(this).commit()
         }
 
     }

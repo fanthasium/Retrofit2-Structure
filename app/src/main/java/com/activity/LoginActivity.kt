@@ -3,6 +3,7 @@ package com.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +16,6 @@ import com.sharedpref.PreferenceUtil
 import kotlinx.coroutines.*
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
-import java.lang.Exception
 
 
 class LoginActivity : AppCompatActivity() {
@@ -29,20 +29,19 @@ class LoginActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.login_main)
 
         val intent = Intent(this@LoginActivity, InfoActivity::class.java)
-        val checkRec =PreferenceUtil(this@LoginActivity).getString(PreferenceUtil.CHECK_BOX, "" )
+        val checkRec = PreferenceUtil(this@LoginActivity).getString(PreferenceUtil.CHECK_BOX, "")
 
         Log.e("line", "---------------------------------------------")
 
 
-        if(checkRec == "true"){
+        if (checkRec == "true") {
             startActivity(intent)
             finish()
+            Log.e("Logging", "Logging???")
         }
 
         Http.clientBuilder.addInterceptor(Http.loggingInterceptor)
         Http.loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        //  retrofit2 이 비동기 실행이기에 코루틴 사용해야함 , 비동기적 실행 구성으로 짜야함
-
 
         // checkbox o,x
         binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
@@ -67,34 +66,43 @@ class LoginActivity : AppCompatActivity() {
                     )
                 )
 
-                   try {
-                       if (resultData.isSuccessful) {
-                           Timber.e("${resultData.body()}")
-                           Log.e("LoginActivity(Body)", "${resultData.body()}")
+                try {
+                    if (resultData.isSuccessful) {
+                        Timber.e("${resultData.body()}")
+                        Log.e("LoginActivity(Body)", "${resultData.body()}")
 
-                           val accessToken = resultData.body()?.result?.access
-                           val user = resultData.body()?.result!!.user
+                        val accessToken = resultData.body()?.result?.access
+                        val reFreshToken = resultData.body()?.result?.refresh
+                        val user = resultData.body()?.result!!.user
 
-                           //set Token
-                           PreferenceUtil(this@LoginActivity).setString(
-                               PreferenceUtil.ACCESS_TOKEN,
-                               accessToken.toString()
-                           )
 
-                           intent.apply {
-                               putExtra(  "name", user.name)
-                               putExtra(  "gender", user.gender)
-                               putExtra(  "birth", user.birth)
-                           }
+                        //set Token
+                        PreferenceUtil(this@LoginActivity).apply {
+                            setString(
+                                PreferenceUtil.ACCESS_TOKEN,
+                                accessToken.toString()
+                            )
+                            setString(
+                                PreferenceUtil.REFRESH_TOKEN,
+                                reFreshToken.toString()
+                            )
+                        }
 
-                           startActivity(intent)
-                           finish()
-                       }
-                   } catch (e: Exception) {
-                       Log.e("FAILED : ", "${resultData.code()}")
-                       e.printStackTrace()
-                   }
-               }
+                        intent.apply {
+                            putExtra("name", user.name)
+                            putExtra("gender", user.gender)
+                            putExtra("birth", user.birth)
+                        }
+
+                        startActivity(intent)
+                        finish()
+                    }
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Log.e("FAILED : ", "${resultData.code()}")
+                }
+            }
         }
 
 
@@ -143,10 +151,5 @@ class LoginActivity : AppCompatActivity() {
              })*/
     }
 
-    fun autoLogin() {
-        if (binding.checkBox.isChecked) {
-            check = true
-        }
-    }
 }
 

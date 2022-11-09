@@ -3,20 +3,21 @@ package com.dto
 import com.requestdata.GameListReqeust
 import com.requestdata.LoginRequest
 import com.responsedata.GameResultData
+import com.responsedata.ReIssueResult
+import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Header
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface RequestDto {
 
     companion object {
         const val CONTENT_TYPE = "content-type: application/json"
+        private const val HEADERS_JSON2 = "X-PATH:ADMIN"
         const val xAPI_SERVICE = "x-api-service: rct"
         const val xAPI_VERSION = "x-api-version: 1"
         const val LOGIN_API = "/user/check/login"
         const val ALL_LIST_API = "/app/get/contents"
+        const val RE_ISSUE_API= "/user/reissue/token"
         private const val AUTHORIZATION = "Authorization"
     }
 
@@ -30,6 +31,12 @@ interface RequestDto {
         @Header(AUTHORIZATION) token: String,
         @Body data: GameListReqeust
     ): Response<GameResultData>
+
+    @Headers(CONTENT_TYPE, HEADERS_JSON2, xAPI_VERSION)
+    @POST(RE_ISSUE_API)
+    suspend fun getReissue(
+        @Header(AUTHORIZATION) reToken: String
+    ): Response<ReIssueResult>
 
 
 }

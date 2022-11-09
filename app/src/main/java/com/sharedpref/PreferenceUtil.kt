@@ -7,6 +7,7 @@ class PreferenceUtil(context: Context) {
 
     companion object {
         const val ACCESS_TOKEN = "ACCESS_TOKEN"
+        const val REFRESH_TOKEN = "REFRESH_TOKEN"
         const val CHECK_BOX = "CHECK_BOX"
     }
 
@@ -23,7 +24,7 @@ class PreferenceUtil(context: Context) {
     }
 
     fun remove(key: String) {
-        prefs.edit().remove(key).commit()
+        prefs.edit().remove(key).apply()
     }
 
 

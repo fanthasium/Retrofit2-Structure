@@ -1,8 +1,10 @@
 package com.activity
 
 
+import android.app.TaskInfo
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -10,6 +12,7 @@ import androidx.activity.viewModels
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.viewbinding.BuildConfig
 import com.ViewModelGameList
 
 import com.example.benfordslaw.R
@@ -33,9 +36,11 @@ class InfoActivity : AppCompatActivity(), ListFragment.callBack {
         val gender = intent.getStringExtra("gender")
         val birth = intent.getStringExtra("birth")
         binding.userInfoTxtView.text = "$name" + "($gender)\n" + "$birth"
+
         /* viewModels 라이브러리로 viewModelProvider 필요없이 바로 상속받을 수 있다
          viewModel = ViewModelProvider(this)[ViewModelLogin::class.java]
          */
+
         binding.listBtn.setOnClickListener {
             supportFragmentManager
                 .beginTransaction()
@@ -65,9 +70,10 @@ class InfoActivity : AppCompatActivity(), ListFragment.callBack {
         lastTimeBackPressed = System.currentTimeMillis()
         Toast.makeText(this, "한번더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
     }
-
+     //fragment callback 패턴 activity에서
     override fun callBack() {
         super.callBack()
     }
+
 
 }

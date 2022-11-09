@@ -1,17 +1,23 @@
 package com.activity
 
 import android.content.Intent
+import android.nfc.Tag
+
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.viewModels
+
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import com.example.benfordslaw.BuildConfig
 import com.example.benfordslaw.R
 import com.example.benfordslaw.databinding.LoginMainBinding
 import com.http.Http
 import com.requestdata.LoginRequest
+import com.responsedata.VersionRequest
 import com.sharedpref.PreferenceUtil
 import kotlinx.coroutines.*
 import okhttp3.logging.HttpLoggingInterceptor
@@ -28,16 +34,18 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.login_main)
 
+        Timber.plant(Timber.DebugTree())
+
         val intent = Intent(this@LoginActivity, InfoActivity::class.java)
         val checkRec = PreferenceUtil(this@LoginActivity).getString(PreferenceUtil.CHECK_BOX, "")
 
-        Log.e("line", "---------------------------------------------")
+        Timber.tag("line").e("---------------------------------------------")
 
 
         if (checkRec == "true") {
             startActivity(intent)
             finish()
-            Log.e("Logging", "Logging???")
+            Timber.e("AUTO CHECK: SUCCESS")
         }
 
         Http.clientBuilder.addInterceptor(Http.loggingInterceptor)
@@ -52,6 +60,24 @@ class LoginActivity : AppCompatActivity() {
                     check.toString()
                 )
             }
+        }
+
+        //version Check
+        CoroutineScope(Dispatchers.Main).launch {
+            val versionClient = Http.service.getVersion(VersionRequest("RCT"))
+
+
+
+
+            if (versionClient.body()!!.result!!.info != "1.6.7") {
+                Toast.makeText(this@LoginActivity, "(3초뒤 종료됩니다) 버전 업데이트를 해주세요!", Toast.LENGTH_SHORT)
+                    .show()
+                //BuildConfig.version name check해야함
+                delay(3000)
+                // 백그라운드에서 종료
+                ActivityCompat.finishAffinity(this@LoginActivity)
+            }
+
         }
 
         binding.loginTxtView.setOnClickListener {

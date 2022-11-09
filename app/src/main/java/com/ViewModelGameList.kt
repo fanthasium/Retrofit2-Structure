@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 import java.lang.Exception
 
 
@@ -29,7 +30,7 @@ class ViewModelGameList : ViewModel() {
     val liveData: LiveData<List<GameResult>?> = _liveData
 
     private val _refreshData = MutableLiveData<String>()
-    val refreshData : LiveData<String> = _refreshData
+    val refreshData: LiveData<String> = _refreshData
 
 
     // 초기값 설정
@@ -53,19 +54,21 @@ class ViewModelGameList : ViewModel() {
             if (gameListData.isSuccessful) {
                 _liveData.value = gameListData.body()?.result
 
-            }else{
-                Log.e("ERROR BODY:", "${gameListData.errorBody()?.string()}")
-                Log.e("REFRESH_TOKEN", "${REFRESH_TOKEN}")
+            } else {
                 //토큰 재생성 클라이언트
                 val reIssue = Http.service.getReissue("Bearer $REFRESH_TOKEN")
+                try {
 
-                if (reIssue.isSuccessful) {
-                    //재생성된 access 토큰 저장
-                    PreferenceUtil(context).setString(
-                        "ACCESS_TOKEN",
-                        "${reIssue.body()?.result?.access}"
-                    )
-                    Log.e("LOGGER : TOKEN", "${reIssue.body()?.result?.access}")
+                    if (reIssue.isSuccessful) {
+                        //재생성된 access 토큰 저장
+                        PreferenceUtil(context).setString(
+                            "ACCESS_TOKEN",
+                            "${reIssue.body()?.result?.access}"
+                        )
+                    }
+                } catch (e: Exception) {
+                    Timber.tag("ERROR").e("${reIssue.code()}")
+                    e.printStackTrace()
                 }
 
             }

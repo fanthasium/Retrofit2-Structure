@@ -26,6 +26,7 @@
             android:textColor="#F20E0E0E"
             android:textSize="30sp"
             android:textStyle="italic"
+            android:inputType="text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -14,7 +14,6 @@ data class ReIssueResult(
 data class Result(
     @SerializedName("access") val access: String,
     @SerializedName("refresh") val refresh: String?,
-
     )
 
 

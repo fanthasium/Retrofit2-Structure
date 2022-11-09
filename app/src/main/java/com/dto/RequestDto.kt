@@ -4,6 +4,8 @@ import com.requestdata.GameListReqeust
 import com.requestdata.LoginRequest
 import com.responsedata.GameResultData
 import com.responsedata.ReIssueResult
+import com.responsedata.VersionData
+import com.responsedata.VersionRequest
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -18,6 +20,7 @@ interface RequestDto {
         const val LOGIN_API = "/user/check/login"
         const val ALL_LIST_API = "/app/get/contents"
         const val RE_ISSUE_API= "/user/reissue/token"
+        const val VERSION_API= "/app/get/version"
         private const val AUTHORIZATION = "Authorization"
     }
 
@@ -38,5 +41,10 @@ interface RequestDto {
         @Header(AUTHORIZATION) reToken: String
     ): Response<ReIssueResult>
 
+    @Headers(CONTENT_TYPE, HEADERS_JSON2, xAPI_VERSION)
+    @POST(VERSION_API)
+    suspend fun getVersion(
+        @Body type: VersionRequest
+    ): Response<VersionData>
 
 }

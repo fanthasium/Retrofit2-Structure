@@ -32,7 +32,7 @@ class ViewModelGameList : ViewModel() {
     private val _refreshData = MutableLiveData<String>()
     val refreshData: LiveData<String> = _refreshData
 
-
+    private val getListRepository = GetListRepository()
     // 초기값 설정
     init {
         _liveData.value = listOf()
@@ -45,16 +45,16 @@ class ViewModelGameList : ViewModel() {
         val REFRESH_TOKEN = PreferenceUtil(context).getString(PreferenceUtil.REFRESH_TOKEN, "")
 
         viewModelScope.launch {
-            val gameListData = Http.service.getGameList(
+     /*       val gameListData = Http.service.getGameList(
                 "Bearer $sharedPref", GameListReqeust("RCT")
             )
             val c = gameListData.errorBody()
+*/
+            val listResponse = getListRepository.getGameList(sharedPref)
+            if (listResponse.isSuccessful) {
+            _liveData.value = listResponse.body()?.result
 
-
-            if (gameListData.isSuccessful) {
-                _liveData.value = gameListData.body()?.result
-
-            } else {
+        } else {
                 //토큰 재생성 클라이언트
                 val reIssue = Http.service.getReissue("Bearer $REFRESH_TOKEN")
                 try {

@@ -1,4 +1,5 @@
 /*
+
 package com.http
 
 import okhttp3.*
@@ -6,7 +7,8 @@ import okhttp3.*
 class TokenInterceptor: Authenticator {
 
 
-    */
+
+*/
 /**
      * Returns a request that includes a credential to satisfy an authentication challenge in `response`. Returns null if the challenge cannot be satisfied.
      *
@@ -16,7 +18,9 @@ class TokenInterceptor: Authenticator {
      * application interceptor, such as when implementing client-specific retries.
      *//*
 
+
     override fun authenticate(route: Route?, response: Response): Request? {
 
     }
-}*/
+}
+*/

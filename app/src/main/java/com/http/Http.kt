@@ -1,30 +1,57 @@
 package com.http
 
-import com.dto.RequestDto
+import android.util.Log
+import com.dto.HttpService
+import com.sharedpref.PreferenceUtil
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.util.concurrent.TimeUnit
 
 
-class Http {
-    companion object {
-        private val _LOGIN = "http://testapi.super-brain.co.kr"
-
-        val clientBuilder = OkHttpClient.Builder()
-        val loggingInterceptor = HttpLoggingInterceptor()
+object Http {
 
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(_LOGIN)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(clientBuilder.build())
+    private const val baseUrl = "http://testapi.super-brain.co.kr"
+
+    val clientBuilder = OkHttpClient.Builder()
+    val loggingInterceptor = HttpLoggingInterceptor()
+
+    //Info Activity에대한 context가 맞는지 확인해보쟝!!
+
+    private val httpLogger =
+        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
+
+    private fun provideOkHttpClient(tokenAuthenticator: TokenInterceptor): OkHttpClient =
+        OkHttpClient
+            .Builder()
+            .addInterceptor(httpLogger)
+            .authenticator(tokenAuthenticator) // Called when access token or refresh token expired
+            .connectTimeout(5, TimeUnit.SECONDS)
+            .writeTimeout(5, TimeUnit.SECONDS)
+            .readTimeout(5, TimeUnit.SECONDS)
+            .callTimeout(10, TimeUnit.SECONDS)
             .build()
 
-        val service = retrofit.create(RequestDto::class.java)
+    //통신
+    val retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 
-}
+    val service = retrofit.create(HttpService::class.java)
+
+    //refresh
+    fun withTokenInterceptor(pref: PreferenceUtil): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(provideOkHttpClient(TokenInterceptor(pref)))
+            .build()
+    }
+    fun preference(pref: PreferenceUtil) = withTokenInterceptor(pref).create(HttpService::class.java)
+
 
 }

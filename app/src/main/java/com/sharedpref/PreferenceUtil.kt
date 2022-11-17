@@ -2,6 +2,7 @@ package com.sharedpref
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.fragment.ListFragment
 
 class PreferenceUtil(context: Context) {
 
@@ -15,7 +16,7 @@ class PreferenceUtil(context: Context) {
         context.getSharedPreferences("prefs_name", Context.MODE_PRIVATE)
 
 
-    fun getString(key: String, defValue: String?): String {
+    fun getString(key: String, defValue: String?):String {
         return prefs.getString(key, defValue).toString()
     }
 

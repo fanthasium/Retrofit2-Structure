@@ -1,25 +1,25 @@
 package com
 
+import android.util.Log
+import com.activity.InfoActivity
+import com.fragment.ListFragment
 import com.http.Http
 import com.requestdata.GameListReqeust
-import com.responsedata.GameResult
+
 import com.responsedata.GameResultData
+import com.responsedata.ReIssueResult
 import com.sharedpref.PreferenceUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+
 import retrofit2.Response
-import timber.log.Timber
+
 
 class GetListRepository {
 
-    suspend fun getGameList(access: String): Response<GameResultData> {
-
-            val gameListData = Http.service.getGameList(
-                "Bearer $access", GameListReqeust("RCT")
-            )
-            val c = gameListData.errorBody()
+    suspend fun getGameList(access: String, pref: PreferenceUtil): Response<GameResultData> {
+        val gameListData = Http.preference(pref).getGameList(
+            "Bearer $access", GameListReqeust("RCT")
+        )
         return gameListData
-
     }
+
 }

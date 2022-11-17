@@ -1,10 +1,8 @@
 package com.activity
 
 import android.content.Intent
-import android.nfc.Tag
 
 import android.os.Bundle
-import android.text.Html
 import android.util.Log
 import android.widget.Toast
 
@@ -12,7 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
-import com.example.benfordslaw.BuildConfig
 import com.example.benfordslaw.R
 import com.example.benfordslaw.databinding.LoginMainBinding
 import com.http.Http
@@ -65,8 +62,6 @@ class LoginActivity : AppCompatActivity() {
         //version Check
         CoroutineScope(Dispatchers.Main).launch {
             val versionClient = Http.service.getVersion(VersionRequest("RCT"))
-
-
 
 
             if (versionClient.body()!!.result!!.info != "1.6.7") {

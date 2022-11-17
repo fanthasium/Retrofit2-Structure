@@ -1,26 +1,62 @@
-/*
-
 package com.http
 
+import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
+import android.util.Log
+import com.GetListRepository
+import com.activity.InfoActivity
+import com.activity.LoginActivity
+import com.sharedpref.App
+import com.sharedpref.PreferenceUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import okhttp3.*
+import timber.log.Timber
+import java.lang.Exception
 
-class TokenInterceptor: Authenticator {
+class TokenInterceptor(
+    val pref: PreferenceUtil
+) : Authenticator {
 
-
-
-*/
-/**
-     * Returns a request that includes a credential to satisfy an authentication challenge in `response`. Returns null if the challenge cannot be satisfied.
-     *
-     *
-     * The route is best effort, it currently may not always be provided even when logically
-     * available. It may also not be provided when an authenticator is re-used manually in an
-     * application interceptor, such as when implementing client-specific retries.
-     *//*
-
+    companion object {
+        private val TAG = TokenInterceptor::class.java.simpleName
+    }
 
     override fun authenticate(route: Route?, response: Response): Request? {
+        val refreshToken = pref.getString(PreferenceUtil.REFRESH_TOKEN, "")
+        Log.e("401 ERROR", "${response.code()}")
+        val c = response.request()
 
+
+        if (response.code() == 401) {
+            val c1 = Http.preference(pref).getReissue("Bearer $refreshToken").execute()
+
+
+            // refreshToken
+            if (c1.isSuccessful) {
+                Log.e("200", "SUCCESS")
+
+                //재생성된 access 토큰 저장
+                pref.setString(
+                    "ACCESS_TOKEN",
+                    "${c1.body()?.result?.access}"
+                )
+
+                if (c1.body()?.result?.access != pref.getString("ACCESS_TOKEN", "")) {
+                    Log.e("200", "")
+                    return c.newBuilder()
+                        .removeHeader("Authorization")
+                        .header("Authorization", "Bearer $refreshToken")
+                        .build()
+                }
+
+            }
+        }
+        return c
     }
+
+
 }
-*/

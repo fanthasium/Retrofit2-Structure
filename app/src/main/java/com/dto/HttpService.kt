@@ -10,7 +10,7 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
-interface RequestDto {
+interface HttpService {
 
     companion object {
         const val CONTENT_TYPE = "content-type: application/json"
@@ -37,9 +37,9 @@ interface RequestDto {
 
     @Headers(CONTENT_TYPE, HEADERS_JSON2, xAPI_VERSION)
     @POST(RE_ISSUE_API)
-    suspend fun getReissue(
+    fun getReissue(
         @Header(AUTHORIZATION) reToken: String
-    ): Response<ReIssueResult>
+    ): Call<ReIssueResult>
 
     @Headers(CONTENT_TYPE, HEADERS_JSON2, xAPI_VERSION)
     @POST(VERSION_API)

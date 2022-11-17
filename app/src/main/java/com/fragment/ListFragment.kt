@@ -1,13 +1,9 @@
 package com.fragment
 
-import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.createBitmap
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -17,21 +13,26 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 
 import com.ViewModelGameList
-import com.activity.InfoActivity
 import com.adapter.ListAdapter
 
 import com.example.benfordslaw.R
 import com.example.benfordslaw.databinding.FragmentGameListBinding
+import com.http.Http
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
-class ListFragment : Fragment() {
+class ListFragment(viewModel : ViewModelGameList) : Fragment() {
 
     lateinit var binding: FragmentGameListBinding
     lateinit var adapter: ListAdapter
-    val viewModel: ViewModelGameList by viewModels()
+    val liveData = viewModel.liveData
+
+
 
     interface callBack {
-        fun callBack(){
+        fun callBack() {
             //fragment call back 패턴
         }
     }
@@ -51,18 +52,22 @@ class ListFragment : Fragment() {
 
         val rcy = binding.rcyView
 
-        context?.let { viewModel.gameList(it) }
-        viewModel.liveData.observe(viewLifecycleOwner, Observer {
-            val data = viewModel.liveData.value
+/*        CoroutineScope(Dispatchers.Main).launch{
+            context?.let { viewModel.gameList(it) }
+        }*/
+
+        liveData.observe(viewLifecycleOwner) {
+            val data = liveData.value
             adapter = ListAdapter(data!!)
             rcy.setHasFixedSize(true)
             rcy.adapter = adapter
             rcy.layoutManager =
                 GridLayoutManager(activity, 5, GridLayoutManager.HORIZONTAL, false)
-        })
+        }
 
-        binding.closeBtn.setOnClickListener{
-            val transaction: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+        binding.closeBtn.setOnClickListener {
+            val transaction: FragmentTransaction =
+                requireActivity().supportFragmentManager.beginTransaction()
             transaction.remove(this).commit()
         }
 

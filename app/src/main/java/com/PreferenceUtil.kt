@@ -1,10 +1,13 @@
-package com.sharedpref
+package com
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.fragment.ListFragment
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class PreferenceUtil(context: Context) {
+@Singleton
+class PreferenceUtil @Inject constructor(@ApplicationContext context: Context) {
 
     companion object {
         const val ACCESS_TOKEN = "ACCESS_TOKEN"

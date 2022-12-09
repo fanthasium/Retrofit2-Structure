@@ -18,6 +18,7 @@ import com.adapter.ListAdapter
 import com.example.benfordslaw.R
 import com.example.benfordslaw.databinding.FragmentGameListBinding
 import com.http.Http
+import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

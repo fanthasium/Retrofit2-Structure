@@ -1,4 +1,4 @@
-package com.requestdata
+package com.requestdto
 
 import com.google.gson.annotations.SerializedName
 

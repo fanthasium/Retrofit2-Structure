@@ -1,6 +1,5 @@
 package com.responsedata
 
-import com.dto.LoginResult
 import com.google.gson.annotations.SerializedName
 
 data class GameResultData(

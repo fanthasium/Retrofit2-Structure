@@ -1,12 +1,10 @@
 package com.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.dto.LoginResult
 import com.example.benfordslaw.databinding.ItemListBinding
 import com.responsedata.GameResult
 

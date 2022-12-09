@@ -1,7 +1,7 @@
-package com.dto
+package com.clientserivce
 
-import com.requestdata.GameListReqeust
-import com.requestdata.LoginRequest
+import com.requestdto.GameListReqeust
+import com.requestdto.LoginRequest
 import com.responsedata.GameResultData
 import com.responsedata.ReIssueResult
 import com.responsedata.VersionData

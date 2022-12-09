@@ -13,18 +13,21 @@ import androidx.databinding.DataBindingUtil
 import com.example.benfordslaw.R
 import com.example.benfordslaw.databinding.LoginMainBinding
 import com.http.Http
-import com.requestdata.LoginRequest
+import com.requestdto.LoginRequest
 import com.responsedata.VersionRequest
-import com.sharedpref.PreferenceUtil
+import com.PreferenceUtil
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: LoginMainBinding
     var check = false
+    @Inject lateinit var preferenceUtil: PreferenceUtil
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
         Timber.plant(Timber.DebugTree())
 
         val intent = Intent(this@LoginActivity, InfoActivity::class.java)
-        val checkRec = PreferenceUtil(this@LoginActivity).getString(PreferenceUtil.CHECK_BOX, "")
+        val checkRec = preferenceUtil.getString(PreferenceUtil.CHECK_BOX, "")
 
         Timber.tag("line").e("---------------------------------------------")
 
@@ -52,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
         binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 check = true
-                PreferenceUtil(this@LoginActivity).setString(
+                preferenceUtil.setString(
                     PreferenceUtil.CHECK_BOX,
                     check.toString()
                 )

@@ -1,21 +1,8 @@
 package com.http
 
-import android.app.Application
-import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
-import com.GetListRepository
-import com.activity.InfoActivity
-import com.activity.LoginActivity
-import com.sharedpref.App
-import com.sharedpref.PreferenceUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import com.PreferenceUtil
 import okhttp3.*
-import timber.log.Timber
-import java.lang.Exception
 
 class TokenInterceptor(
     val pref: PreferenceUtil
@@ -45,6 +32,7 @@ class TokenInterceptor(
                     "${c1.body()?.result?.access}"
                 )
 
+                //수동 x 자동으로 하게 끔
                 if (c1.body()?.result?.access != pref.getString("ACCESS_TOKEN", "")) {
                     Log.e("200", "")
                     return c.newBuilder()
@@ -55,8 +43,8 @@ class TokenInterceptor(
 
             }
         }
-        return c
+        //리프레쉬 토큰 만료에대한 예외 처리가 없어서 일단 null
+        return null
     }
-
 
 }

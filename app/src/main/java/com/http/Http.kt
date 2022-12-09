@@ -1,8 +1,7 @@
 package com.http
 
-import android.util.Log
-import com.dto.HttpService
-import com.sharedpref.PreferenceUtil
+import com.clientserivce.HttpService
+import com.PreferenceUtil
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -19,11 +18,19 @@ object Http {
     val clientBuilder = OkHttpClient.Builder()
     val loggingInterceptor = HttpLoggingInterceptor()
 
-    //Info Activity에대한 context가 맞는지 확인해보쟝!!
 
     private val httpLogger =
         HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
 
+    //통신
+    val retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val service = retrofit.create(HttpService::class.java)
+
+    //refresh
     private fun provideOkHttpClient(tokenAuthenticator: TokenInterceptor): OkHttpClient =
         OkHttpClient
             .Builder()
@@ -35,13 +42,6 @@ object Http {
             .callTimeout(10, TimeUnit.SECONDS)
             .build()
 
-    //통신
-    val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    val service = retrofit.create(HttpService::class.java)
 
     //refresh
     fun withTokenInterceptor(pref: PreferenceUtil): Retrofit {

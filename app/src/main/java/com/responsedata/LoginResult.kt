@@ -1,4 +1,4 @@
-package com.dto
+package com.clientserivce
 
 import com.google.gson.annotations.SerializedName
 import com.responsedata.User

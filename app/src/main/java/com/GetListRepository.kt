@@ -1,25 +1,27 @@
 package com
 
-import android.util.Log
-import com.activity.InfoActivity
-import com.fragment.ListFragment
 import com.http.Http
-import com.requestdata.GameListReqeust
+import com.requestdto.GameListReqeust
 
 import com.responsedata.GameResultData
-import com.responsedata.ReIssueResult
-import com.sharedpref.PreferenceUtil
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 import retrofit2.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class GetListRepository {
-
+@Module
+@InstallIn(SingletonComponent::class)
+class GetListRepository @Inject constructor() {
+    @Singleton
+    @Provides
     suspend fun getGameList(access: String, pref: PreferenceUtil): Response<GameResultData> {
-        val gameListData = Http.preference(pref).getGameList(
+        return Http.preference(pref).getGameList(
             "Bearer $access", GameListReqeust("RCT")
         )
-        return gameListData
     }
 
 }
